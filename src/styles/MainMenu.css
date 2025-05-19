@@ -1,0 +1,93 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Georgia', serif;
+  background: white;
+  overflow-x: hidden;
+  color: #333;
+}
+
+/* Make card centered */
+.card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #f6f3f3;
+  padding: 4rem 5rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  text-align: center;
+  max-width: 700px;
+  max-height: 400px;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+  z-index: 2;
+}
+
+/* Reveal card */
+.card.visible {
+  opacity: 1;
+}
+
+.card h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  font-style: italic;
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+.icons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Position each SVG uniquely */
+.bg-svg {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  opacity: 0;
+  transition: all 2s ease;
+  z-index: 0;
+}
+
+/* SVG positions */
+.svg1  { top: 5%;    left: 8%; }
+.svg2  { top: 8%;    right: 10%; }
+.svg3  { top: 25%;   left: 20%; }
+.svg4  { top: 29%;   right: 10%; }
+.svg5  { top: 5%;   left: 40%; }
+.svg6  { top: 50%;   right: 6%; }
+.svg7  { bottom: 35%; left: 10%; }
+.svg8  { bottom: 10%; right: 30%; }
+.svg9  { bottom: 10%; left: 12%; }
+.svg10 { bottom: 5%;  right: 10%; }
+.svg11 { top: 70%;    left: 35%; }
+.svg12 { top: 20%;    right: 30%; }
+
+
+.bg-svg.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.icon {
+  padding: 0.6rem 1rem;
+  border-radius: 0.8rem;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  color: #333;
+}
+
+.personal { background: #f6d88c; }
+.x { background: #d0e2e7; }
+.instagram { background: #c6e48b; }
+.github { background: pink; }
