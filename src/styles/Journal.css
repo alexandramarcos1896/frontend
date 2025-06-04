@@ -32,7 +32,12 @@
   padding: 0 2rem;
 }
 
-.icons-left,
+.top-bar-buttons {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem 2rem;
+}
+
 .icons-right {
   display: flex;
   gap: 1.5rem;
@@ -86,6 +91,19 @@
   box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
+.journal-box textarea {
+  width: 100%;
+  height: 100%;
+  font-family: 'Georgia', serif;
+  font-size: 1rem;
+  border: none;
+  resize: none;
+  outline: none;
+  background: transparent;
+  color: #333;
+  padding: 0;
+}
+
 
 .journal-box h2 {
   margin-top: 0;
@@ -135,3 +153,93 @@
   background: #ffd6d6;
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* background: rgba(0, 0, 0, 0.3); */
+  z-index: 10;
+}
+
+.floating-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 60vw;
+  max-height: 80vh;
+  transform: translate(-50%, -50%);
+  background: #fff8f2;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  overflow-y: auto;
+  z-index: 11;
+  animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+  from {
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+.new-note-button {
+  padding: 0.5rem 1rem;
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+}
+
+.new-note-button:hover {
+  background-color: #e6e6e6;
+}
+
+.new-note-button {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background-color: #124e78;
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 2rem;
+  font-size: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.new-note-button img {
+  width: 20px;
+  height: 20px;
+}
+
+.new-note-button:hover {
+  background-color: #0f3e63;
+  transform: translateY(-2px);
+}
+
+.floating-box textarea {
+  width: 100%;
+  height: 60%;
+  font-family: 'Georgia', serif;
+  font-size: 1rem;
+  border: none;
+  resize: none;
+  outline: none;
+  background: transparent;
+  color: #333;
+  padding: 0.5rem 0;
+  margin-top: 1rem;
+}
