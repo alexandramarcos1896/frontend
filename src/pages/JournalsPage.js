@@ -1,6 +1,7 @@
 // src/pages/JournalsPage.js
 import React, { useState, useEffect} from 'react';
 import '../styles/Journal.css';
+import LogoutButton from '../components/LogoutButton';
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import axios from 'axios';
@@ -110,7 +111,9 @@ const JournalsPage = () => {
           <img src="/menu-icon/notebook-svgrepo-com.svg" alt="New Note" />
           <span>New Note</span>
         </button>
+        <LogoutButton />
       </div>
+
 
       <div className="journal-grid">
         {journals.map((entry) => (
