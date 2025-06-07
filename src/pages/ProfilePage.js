@@ -27,6 +27,7 @@ const ProfilePage = () => {
       username: form.username,
       password: form.password,
       profile: {
+        username: form.username,
         first_name: form.first_name,
         last_name: form.last_name,
         github: form.github,
