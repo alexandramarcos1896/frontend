@@ -11,7 +11,12 @@ const LogoutButton = () => {
     navigate('/');
   };
 
-  return <button onClick={handleLogout}>Log Out</button>;
+  return (
+    <button className="logout-button" onClick={handleLogout}>
+      <img src="/menu-icon/logout-svgrepo-com.svg" alt="Logout" />
+      <span>Logout</span>
+    </button>
+    );
 };
 
 

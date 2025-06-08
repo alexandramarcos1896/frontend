@@ -14,7 +14,7 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   background: #f6f3f3;
-  padding: 4rem 5rem;
+  padding: 6rem 6rem;
   border-radius: 1rem;
   box-shadow: 0 8px 16px rgba(0,0,0,0.1);
   text-align: center;
@@ -94,3 +94,30 @@ body {
 
 .login { background: pink; }
 .newuser { background: pink; }
+
+.logout-floating {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+}
+
+.logout-floating .new-note-button {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  background-color: #f66;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background-color 0.3s;
+}
+
+.logout-floating .new-note-button:hover {
+  background-color: #d44;
+}
+
+.logout-floating .new-note-button img {
+  width: 16px;
+  height: 16px;
+}
+

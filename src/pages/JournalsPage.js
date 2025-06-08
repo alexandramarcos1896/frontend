@@ -1,59 +1,96 @@
 // src/pages/JournalsPage.js
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Journal.css';
+// import { getUserIdFromToken } from '../utils/auth';
 import LogoutButton from '../components/LogoutButton';
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import axios from 'axios';
 
 const JournalsPage = () => {
-
-//   const initialJournals = [
-//   { id: 1, title: 'Gratitude Log', content: 'Today I felt grateful for the sunshine warming my face during my morning walk...' },
-//   { id: 2, title: 'Morning Reflections', content: 'Had vivid dreams about being back in college...' },
-//   { id: 3, title: 'Workout Notes', content: 'Personal best today - ran 5km in 28 minutes!...' },
-//   { id: 4, title: 'Microeconomics Notes', content: 'Reviewed Consumer Theory concepts...' },
-//   { id: 5, title: 'Creative Writing', content: 'Started a short story about a librarian who...' },
-//   { id: 6, title: 'Weekly Goals', content: '1. Finish project proposal by Wednesday\n2. Call mom...' },
-//   { id: 7, title: 'Travel Ideas', content: 'Considering Portugal for next summer...' },
-//   { id: 8, title: 'Book Reflections', content: 'Just finished "Atomic Habits". Key takeaway...' }
-// ];
-
   const [journals, setJournals] = useState([]);
   const [selectedJournalId, setSelectedJournalId] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:8000/api/notes/')
+    const token = localStorage.getItem('access');
+    if (token) {
+      axios.get('http://localhost:8000/api/notes/', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .then(res => setJournals(res.data))
       .catch(err => console.error(err));
+    }
+    // const token = localStorage.getItem('access_token');
+    // const axiosConfig = {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // };
+
+  // axios
+  //   .get('http://localhost:8000/api/notes/', {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   })
+  //   .then((res) => setJournals(res.data))
+  //   .catch((err) => console.error(err));
   }, []);
 
   const addNewNote = () => {
-    // const newId = journals.length > 0 ? journals[journals.length - 1].id + 1 : 1;
-    const newNote = {
-      // id: newId,
-      title: `New Note`,
-      content: 'Start writing your thoughts here...'
+    // const userId = getUserIdFromToken();
+    const token = localStorage.getItem('access'); // get JWT
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     };
-    axios.post('http://localhost:8000/api/notes/', newNote)
+    const newId = journals.length > 0 ? journals[journals.length - 1].id + 1 : 1;
+    const newNote = {
+      id: newId,
+      title: `New Note`,
+      content: 'Start writing your thoughts here...',
+      // user: userId,
+    };
+
+    axios.post('http://localhost:8000/api/notes/', newNote, config)
       .then(res => {
-        setJournals(prev => [...prev, res.data]);
-        setSelectedJournalId(res.data.id);
+        console.log("New note response:", res.data)
+      if (!res.data.id) {
+            console.error("No ID returned from backend.");
+            return;
+      }
+      setJournals(prev => [...prev, res.data]);
+      setSelectedJournalId(res.data.id);
       })
       .catch(err => {
-      console.error("ERROR", err);
-    });
-  };
-
-  const deleteNote = (id) => {
-    axios.delete(`http://localhost:8000/api/notes/${id}/`)
-      .then(() => {
-        setJournals(prev => prev.filter(note => note.id !== id));
-        setSelectedJournalId(null);
+        console.error("ERROR", err);
       });
   };
 
+  const deleteNote = (id) => {
+    if (!id) return;
+    // const userId = getUserIdFromToken();
+    const token = localStorage.getItem('access');
+    const axiosConfig = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    axios
+      .delete(`http://localhost:8000/api/notes/${id}/`, axiosConfig)
+      .then(() => {
+        setJournals((prev) => prev.filter((note) => note.id !== id));
+        setSelectedJournalId(null);
+      })
+      .catch((err) => console.error(err));
+  };
+
   const downloadAsDocx = (note) => {
+    // const userId = getUserIdFromToken();
+
     const doc = new Document({
       sections: [
         {
@@ -69,37 +106,59 @@ const JournalsPage = () => {
       ],
     });
 
-    Packer.toBlob(doc).then(blob => {
+    Packer.toBlob(doc).then((blob) => {
       saveAs(blob, `${note.title.replace(/\s+/g, '_')}.docx`);
     });
   };
 
-  const selectedJournal = journals.find(j => j.id === selectedJournalId);
-
   const updateJournalContent = (id, newContent) => {
-    const updatedNote = journals.find(j => j.id === id);
-        if (!updatedNote) return;
-
-        axios.put(`http://localhost:8000/api/notes/${id}/`, {
-          ...updatedNote,
-          content: newContent
-        }).then(res => {
-          setJournals(prev => prev.map(j => j.id === id ? res.data : j));
-        });
+    if (!id) return;
+    const token = localStorage.getItem('access');
+    const axiosConfig = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const updatedNote = journals.find((j) => j.id === id);
+    if (!updatedNote) return;
+    axios
+      .put(
+        `http://localhost:8000/api/notes/${id}/`,
+        { ...updatedNote, content: newContent },
+        axiosConfig
+      )
+      .then((res) => {
+        setJournals(prev => prev.map(j => (j.id === id ? res.data : j)));
+      })
+      .catch(err => console.error("Update failed:", err));
   };
 
   const updateJournalTitle = (id, newTitle) => {
-    const updatedNote = journals.find(j => j.id === id);
-        if (!updatedNote) return;
+    if (!id) return;
+    const updatedNote = journals.find((j) => j.id === id);
+    if (!updatedNote) return;
 
-        axios.put(`http://localhost:8000/api/notes/${id}/`, {
-          ...updatedNote,
-          title: newTitle
-        }).then(res => {
-          setJournals(prev => prev.map(j => j.id === id ? res.data : j));
-        });
+    const token = localStorage.getItem('access');
+    const axiosConfig = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    axios
+      .put(
+        `http://localhost:8000/api/notes/${id}/`,
+        { ...updatedNote, title: newTitle },
+        axiosConfig
+      )
+      .then((res) => {
+        setJournals((prev) =>
+          prev.map((j) => (j.id === id ? res.data : j))
+        );
+      })
+      .catch(err => console.error('Update title error:', err));
   };
 
+  const selectedJournal = journals.find((j) => j.id === selectedJournalId);
   return (
     <div className="journals-container">
       <div className="title-box">
@@ -113,7 +172,6 @@ const JournalsPage = () => {
         </button>
         <LogoutButton />
       </div>
-
 
       <div className="journal-grid">
         {journals.map((entry) => (
@@ -130,29 +188,40 @@ const JournalsPage = () => {
 
       {selectedJournal && (
         <>
-          <div className="overlay" onClick={() => setSelectedJournalId(null)}></div>
+          <div
+            className="overlay"
+            onClick={() => setSelectedJournalId(null)}
+          ></div>
           <div className="floating-box">
             <div className="note-buttons">
               <button
                 className="note-btn delete"
                 onClick={() => deleteNote(selectedJournal.id)}
-              >🗑️</button>
+              >
+                🗑️
+              </button>
               <button
                 className="note-btn download"
                 onClick={() => downloadAsDocx(selectedJournal)}
-              >📄</button>
+              >
+                📄
+              </button>
             </div>
-              <input
-                type="text"
-                value={selectedJournal.title}
-                onChange={(e) => updateJournalTitle(selectedJournal.id, e.target.value)}
-                className="note-title-input"
-              />
-              <textarea
-                value={selectedJournal.content}
-                onChange={(e) => updateJournalContent(selectedJournal.id, e.target.value)}
-                className="note-textarea"
-              />
+            <input
+              type="text"
+              value={selectedJournal.title}
+              onChange={(e) =>
+                updateJournalTitle(selectedJournal.id, e.target.value)
+              }
+              className="note-title-input"
+            />
+            <textarea
+              value={selectedJournal.content}
+              onChange={(e) =>
+                updateJournalContent(selectedJournal.id, e.target.value)
+              }
+              className="note-textarea"
+            />
           </div>
         </>
       )}

@@ -35,7 +35,6 @@ const MainMenuPage = () => {
 
   return (
     <div>
-      <LogoutButton />
       {/* Background SVGs */}
       {[...Array(12)].map((_, i) => (
         <img
@@ -67,6 +66,10 @@ const MainMenuPage = () => {
           {profile?.twitter && <a href={profile.twitter} className="icon x">X</a>}
           {profile?.instagram && <a href={profile.instagram} className="icon instagram">Instagram</a>}
         </div>
+
+      <div className="logout-floating">
+        <LogoutButton />
+      </div>
       </main>
     </div>
   );
